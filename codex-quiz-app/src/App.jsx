@@ -9,6 +9,7 @@ import AdminLayout from "./Components/Admin/AdminLayout";
 import AddQuestion from "./Components/Admin/AddQuestion";
 import EditQuestion from "./Components/Admin/EditQuestion";
 import Leadboard from "./Components/Admin/Leadboard";
+import Quiz from "./Components/Quiz";
 
 function App() {
 
@@ -16,7 +17,8 @@ function App() {
    <>
   <Routes>
     <Route path="/" element={<TeamPage/>}></Route>
-    <Route path="/rules" element={<Rules/>}></Route>  
+    <Route path="/rules" element={<Rules/>}></Route>
+    <Route path="/quiz" element={<Quiz/>}></Route>  
     <Route path="/adminAuth" element={<AdminAuth/>}></Route>
     <Route path="/adminPannel" element={<AdminLayout/>}>
       <Route index element={<QuizDashboard/>}></Route>

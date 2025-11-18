@@ -1,60 +1,164 @@
 import { useState } from "react";
 import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function TeamPage() {
-  let [team, setTeam] = useState("");
+  const [team, setTeam] = useState("");
   const navigate = useNavigate();
 
   const handleTeam = (event) => {
-    let team = event.target.value;
-    team = team.toUpperCase();
-    setTeam(team);
+    setTeam(event.target.value.toUpperCase());
   };
 
-  const handleForm =(e)=>{
+  const handleForm = (e) => {
     e.preventDefault();
-  }
+    if (!team.trim()) return;
+    navigate("/rules");
+  };
 
   return (
     <Layout>
-      <div className="w-[100%] bg-[rgba(0,0,0,0.3)] h-[100%] flex flex-col justify-center items-center">
-        <h1 className="font-[Orbitron] text-center text-7xl font-extrabold text-[#34e47b] [text-shadow:_0_0_10px_#3eeb91] ">
-          CODE KE BOSS <br /> 2025
-        </h1>
-        <h2 className="font=[Montserrat] font-semibold text-4xl text-center text-[#fcf53a] [text-shadow:_0_0_12px_#FFCC00] mt-6">
-          THE ULTIMATE CODING BATTLE IS BACK!
-        </h2>
+      {/* NAVBAR WITH ANIMATION */}
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="fixed top-0 left-0 w-full h-16 sm:h-20 
+        bg-black/60 backdrop-blur-md 
+        flex items-center justify-between 
+        px-4 sm:px-8 z-50"
+      >
+        {/* Left Logo */}
+        <motion.div
+          initial={{ scale: 0.7 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="h-12 w-12 sm:h-16 sm:w-16 flex items-center"
+        >
+          <img src="/main_logo.gif" className="w-full h-full object-contain" />
+        </motion.div>
 
-        <form className="flex flex-col" 
-        onSubmit={handleForm}>
-          <input
-            className="font-[Orbitron] text-center text-4xl text-[#67dfbb] [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb] mt-5 py-4 w-[350px] border-2 bg-[rgba(0,0,0,0.3)]"
+        {/* Middle Title */}
+        <motion.h1
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="hidden sm:block font-[Orbitron] text-white font-bold 
+          text-base sm:text-xl md:text-2xl lg:text-3xl 
+          [text-shadow:_0_0_10px_#3eeb91] text-center"
+        >
+          UTTARANCHAL SCHOOL OF COMPUTING SCIENCES
+        </motion.h1>
+
+        {/* Right Glow Logo */}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          className="h-12 w-12 sm:h-16 sm:w-16 p-1 
+          border-2 border-indigo-400 rounded-full 
+          shadow-[0_0_15px_rgba(99,102,241,0.7)] animate-pulse"
+        >
+          <img
+            src="/IT-utsav.png"
+            className="w-full h-full object-cover rounded-full"
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* MAIN CONTENT */}
+      <div className="pt-24 w-full min-h-screen bg-black/30 flex flex-col justify-center items-center px-4 py-10">
+        {/* TITLE */}
+        <motion.h1
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="font-[Orbitron] text-center text-[#34e47b] font-extrabold 
+          text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
+          [text-shadow:_0_0_10px_#3eeb91]"
+        >
+          CODE KE BOSS <br /> 2025
+        </motion.h1>
+
+        {/* SUBTITLE */}
+        <motion.h2
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.7 }}
+          className="font-[Montserrat] font-semibold text-center 
+          text-2xl sm:text-3xl md:text-4xl 
+          text-[#fcf53a] mt-4 
+          [text-shadow:_0_0_12px_#FFCC00]"
+        >
+          THE ULTIMATE CODING BATTLE IS BACK!
+        </motion.h2>
+
+        {/* FORM */}
+        <form
+          className="flex flex-col items-center mt-8 w-full max-w-sm"
+          onSubmit={handleForm}
+        >
+          {/* INPUT FIELD */}
+          <motion.input
+            required
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            whileFocus={{ scale: 1.05 }}
+            className="font-[Orbitron] text-center text-2xl sm:text-3xl 
+      text-[#67dfbb] bg-black/30 border-2 border-[#67dfbb] 
+      py-3 w-full
+      [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb]"
             type="text"
             onChange={handleTeam}
             placeholder="Team Name"
             value={team}
           />
-          <button
-            onClick={() => navigate("/rules")}
-            className="font-[Orbitron] text-[#001f1a] bg-[#16fa8f] mt-5 w-[14rem] mx-auto py-2 text-4xl rounded-2xl [box-shadow:_0_0_15px_#00FF9E] hover:bg-[#0fbf6d] cursor-pointer "
+
+          {/* BUTTON */}
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            className="font-[Orbitron] mt-5 w-40 sm:w-56 py-3 
+      text-2xl sm:text-3xl rounded-2xl 
+      bg-[#16fa8f] text-[#001f1a] 
+      [box-shadow:_0_0_20px_#00FF9E]
+      hover:bg-[#0fbf6d]"
+            type="submit" // ✔ form submission triggers required
           >
             Start
-          </button>
+          </motion.button>
         </form>
 
-        <p className="text-[#53edc3] text-3xl mt-7 [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb]">
-          Gear up code hard and rule the console.
-        </p>
+        {/* TAGLINE */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-[#53edc3] text-xl sm:text-2xl md:text-3xl mt-6 
+          [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb]"
+        >
+          Gear up, code hard, and rule the console.
+        </motion.p>
 
-        <div className="absolute bottom-8 right-8">
-          <button
+        {/* ADMIN BUTTON */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="fixed bottom-6 right-6"
+        >
+          <motion.button
             onClick={() => navigate("/adminAuth")}
-            className="font-[Orbitron] text-[#001f1a] bg-[#fa1616] font-semibold px-4 py-2 rounded-2xl [box-shadow:_0_0_15px_#fa1616] hover:bg-[#8d1111] cursor-pointer hover:text-[#d4d2d2] "
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.9 }}
+            className="font-[Orbitron] bg-[#fa1616] text-white font-semibold 
+            px-4 py-2 text-lg sm:text-xl rounded-2xl 
+            [box-shadow:_0_0_15px_#fa1616] 
+            hover:bg-[#8d1111]"
           >
             <i className="fa-solid fa-circle-user"></i> &nbsp; Admin
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </Layout>
   );
