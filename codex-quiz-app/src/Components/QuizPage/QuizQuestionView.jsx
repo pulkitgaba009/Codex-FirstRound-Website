@@ -18,7 +18,7 @@ function QuestionView({ question, onAnswer, selectedAnswer }) {
   if (!question) return null;
 
   return (
-    <div className="w-full mt-4 h-[85%] overflow-auto scrollbar-hidden px-8">
+    <div className="w-full mt-4 h-[80%] md:h-[85%] overflow-auto scrollbar-hidden px-8">
       <h2 className="question">Question :</h2>
 
       <p className="questionPara">{question.question}</p>
@@ -39,6 +39,7 @@ function QuestionView({ question, onAnswer, selectedAnswer }) {
                 fontSize: "0.9rem",
                 backgroundColor: "oklch(12.9% 0.042 264.695)",
               }}
+              className="scrollbar-hidden"
             >
               {question.code}
             </SyntaxHighlighter>

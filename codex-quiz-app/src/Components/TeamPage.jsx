@@ -2,6 +2,7 @@ import { useState } from "react";
 import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Header from "./Header";
 
 function TeamPage() {
   const [team, setTeam] = useState("");
@@ -19,52 +20,7 @@ function TeamPage() {
 
   return (
     <Layout>
-      {/* NAVBAR WITH ANIMATION */}
-      <motion.div
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed top-0 left-0 w-full h-16 sm:h-20 
-        bg-black/60 backdrop-blur-md 
-        flex items-center justify-between 
-        px-4 sm:px-8 z-50"
-      >
-        {/* Left Logo */}
-        <motion.div
-          initial={{ scale: 0.7 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="h-12 w-12 sm:h-16 sm:w-16 flex items-center"
-        >
-          <img src="/main_logo.gif" className="w-full h-full object-contain" />
-        </motion.div>
-
-        {/* Middle Title */}
-        <motion.h1
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="hidden sm:block font-[Orbitron] text-white font-bold 
-          text-base sm:text-xl md:text-2xl lg:text-3xl 
-          [text-shadow:_0_0_10px_#3eeb91] text-center"
-        >
-          UTTARANCHAL SCHOOL OF COMPUTING SCIENCES
-        </motion.h1>
-
-        {/* Right Glow Logo */}
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          className="h-12 w-12 sm:h-16 sm:w-16 p-1 
-          border-2 border-indigo-400 rounded-full 
-          shadow-[0_0_15px_rgba(99,102,241,0.7)] animate-pulse"
-        >
-          <img
-            src="/IT-utsav.png"
-            className="w-full h-full object-cover rounded-full"
-          />
-        </motion.div>
-      </motion.div>
-
+      <Header />
       {/* MAIN CONTENT */}
       <div className="pt-24 w-full min-h-screen bg-black/30 flex flex-col justify-center items-center px-4 py-10">
         {/* TITLE */}
@@ -123,7 +79,7 @@ function TeamPage() {
       bg-[#16fa8f] text-[#001f1a] 
       [box-shadow:_0_0_20px_#00FF9E]
       hover:bg-[#0fbf6d]"
-            type="submit" // ✔ form submission triggers required
+            type="submit"
           >
             Start
           </motion.button>
@@ -134,7 +90,7 @@ function TeamPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="text-[#53edc3] text-xl sm:text-2xl md:text-3xl mt-6 
+          className="text-[#53edc3] text-xl sm:text-2xl md:text-3xl mt-6 text-center
           [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb]"
         >
           Gear up, code hard, and rule the console.

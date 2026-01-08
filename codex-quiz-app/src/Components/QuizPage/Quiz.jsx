@@ -4,14 +4,48 @@ import QuizQuestionsList from "./QuizQuestionList";
 import QuizQuestionView from "./QuizQuestionView";
 import formData from "./formData";
 import { motion } from "framer-motion";
+import SecureQuiz from "./SecureQuiz";
+import { useNavigate } from "react-router-dom";
+import Countdown from "./Countdown";
+import Header from "../Header";
 
 function Quiz() {
   const [activeQuestion, setActiveQuestion] = useState(formData[0]);
-
   const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState({}); 
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const nevigate = useNavigate();
+
+  // number of attempted questions (non-empty answers)
+  const attempted = Object.values(answers).filter(
+    (v) => v !== undefined && v !== null && String(v).trim() !== ""
+  ).length;
+
+  // called by SecureQuiz when user exits fullscreen
+  const submitQuiz = () => {
+    if (submitted) return; // already submitted
+    setSubmitted(true);
+
+    // Put your actual submit logic here:
+    // - send `answers` to server
+    // - navigate to results page
+    // - show a modal, etc.
+    console.log("Auto-submitting quiz. Answers:", answers);
+    console.log("Final score:", score);
+
+    // for demo, show an alert (optional)
+    alert(
+      "Quiz auto-submitted due to fullscreen exit. Your score: " +
+        score +
+        "/" +
+        formData.length
+    );
+    nevigate("/");
+  };
 
   const handleAnswer = (id, value) => {
+    if (submitted) return;
+
     const correctAnswer = formData.find((q) => q.id === id).answer;
 
     setAnswers((prevAnswers) => {
@@ -33,33 +67,9 @@ function Quiz() {
 
   return (
     <Layout>
-      {/* Top Nav */}
-      <motion.div
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed top-0 left-0 w-full h-16 sm:h-20
-        bg-black/60 backdrop-blur-md 
-        flex items-center justify-between 
-        px-4 sm:px-8 z-50"
-      >
-        <div className="bg-white h-12 py-2 px-10 rounded-full flex items-center">
-          <img src="/UUlogo.png" className="w-full h-full object-contain" />
-        </div>
+      {/* <SecureQuiz onAutoSubmit={submitQuiz} /> */}
 
-        <h1 className="hidden sm:block font-[Orbitron] text-white font-bold 
-          text-base sm:text-xl md:text-2xl lg:text-3xl 
-          [text-shadow:_0_0_10px_#3eeb91] text-center">
-          UTTARANCHAL SCHOOL OF COMPUTING SCIENCES
-        </h1>
-
-        <div className="h-12 w-12 sm:h-16 sm:w-16 p-1 
-          border-2 border-indigo-400 rounded-full 
-          shadow-[0_0_15px_rgba(99,102,241,0.7)] animate-pulse">
-          <img src="/IT-utsav.png" className="w-full h-full object-cover rounded-full" />
-        </div>
-      </motion.div>
-
+      <Header/>
       {/* Main Layout + one-time motion */}
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 20 }}
@@ -67,27 +77,57 @@ function Quiz() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="overflow-x-hidden mt-10"
       >
-        <div className="w-full px-16 h-[87%] grid grid-cols-12 grid-rows-12 gap-4 mt-18">
-          
+        <div className="w-full px-4 md:px-16 h-[87%] mt-8 md:mt-16 grid grid-cols-12 grid-rows-12 gap-4">
           {/* Left Panel */}
-          <div className="subDivs col-start-1 col-end-9 row-span-12">
-            <h1 className="authHeading">Question View</h1>
+          <div className="subDivs col-start-1 col-span-12 row-start-4 row-span-8 md:col-start-1 md:col-end-9 md:row-span-12">
+            <div className="flex justify-between items-center">
+              <img
+                src="main_logo.gif"
+                className="md:block md:w-9 md:ml-5 md:pt-2 hidden"
+              />
+              <h1 className="font-[Orbitron] font-bold text-xl text-[#fcf53a] [text-shadow:_0_0_12px_#FFCC00] inline mt-2 ml-5 md:ml-0">
+                Question View
+              </h1>
+              {/* import time in seconds from server : auto submit function add */}
+              <Countdown
+                startSeconds={1800}
+                resetOnStart={false}
+                onComplete={() => alert("Time's up!")}
+              />
+            </div>
             <hr className="horizontalLine mt-2" />
 
             <QuizQuestionView
               question={activeQuestion}
               onAnswer={handleAnswer}
               selectedAnswer={answers[activeQuestion?.id]}
+              disabled={submitted}
             />
 
             <div className="mt-4 text-lg font-semibold text-white">
-              Score: {score} / {formData.length}
+              {submitted ? (
+                <>Submitted — Final score: {score} / {formData.length}</>
+              ) : (
+                <>Score: {score} / {formData.length}</>
+              )}
             </div>
           </div>
 
           {/* Right Panel */}
-          <div className="subDivs col-start-9 col-end-13 row-span-12">
-            <h1 className="authHeading pb-2">Questions</h1>
+          <div className="subDivs mt-4 md:mt-0 col-start-1 col-span-12 row-span-3 md:col-start-9 md:col-end-13 md:row-span-10">
+            <div className="flex justify-between items-center">
+              <h1 className="hidden md:block text-white [text-shadow:_0_0_12px_#FFFFFF] font-[Orbitron] ml-5 font-semibold">{attempted} / {formData.length}</h1>
+
+              <h1 className="font-[Orbitron] font-bold text-xl text-[#fcf53a] [text-shadow:_0_0_12px_#FFCC00] text-left mt-2 ml-5 md:ml-0 pb-2">
+                Questions
+              </h1>
+              <img
+                src="main_logo.gif"
+                className="hidden md:block md:w-9 md:mr-5 md:pt-2 pb-2"
+              />
+              <h1 className="text-white md:hidden [text-shadow:_0_0_12px_#FFFFFF] font-[Orbitron] mr-5 font-semibold">{attempted} / {formData.length}</h1>
+
+            </div>
             <hr className="horizontalLine" />
 
             <QuizQuestionsList
@@ -95,7 +135,23 @@ function Quiz() {
               activeId={activeQuestion.id}
               onSelect={setActiveQuestion}
               answers={answers}
+              disabled={submitted}
             />
+          </div>
+
+          {/* Submit div  */}
+          <div className="md:bg-[rgba(0,0,0,0.5)] md:rounded-xl col-start-1 col-span-12 md:col-start-9 md:col-end-13 md:row-span-2 mt-4 md:mt-0 flex justify-center items-center">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="font-[Orbitron] text-[#001f1a] bg-[#16fa8f] 
+                px-12 py-2 text-3xl sm:text-4xl rounded-2xl 
+                my-8 [box-shadow:_0_0_15px_#00FF9E] hover:bg-[#0fbf6d]"
+              // submit pop up
+              onClick={() => " "}
+            >
+              Submit
+            </motion.button>
           </div>
         </div>
       </motion.div>
