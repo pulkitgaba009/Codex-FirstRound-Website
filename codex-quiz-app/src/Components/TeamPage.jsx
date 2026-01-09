@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "./Header";
+import TeamContext from "../Contexts/teamContext";
 
 function TeamPage() {
-  const [team, setTeam] = useState("");
+  const [teamname, setTeamname] = useState("");
   const navigate = useNavigate();
 
+  const {setTeam} = useContext(TeamContext);
+  
+
   const handleTeam = (event) => {
-    setTeam(event.target.value.toUpperCase());
+    setTeamname(event.target.value.toUpperCase());
   };
 
   const handleForm = (e) => {
     e.preventDefault();
-    if (!team.trim()) return;
+    if (!teamname.trim()) return;
+
+    setTeam(teamname);
     navigate("/rules");
   };
 
@@ -61,13 +67,13 @@ function TeamPage() {
             transition={{ delay: 0.4 }}
             whileFocus={{ scale: 1.05 }}
             className="font-[Orbitron] text-center text-2xl sm:text-3xl 
-      text-[#67dfbb] bg-black/30 border-2 border-[#67dfbb] 
-      py-3 w-full
-      [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb]"
+          text-[#67dfbb] bg-black/30 border-2 border-[#67dfbb] 
+            py-3 w-full
+            [text-shadow:_0_0_.5px_#67dfbb,_0_0_1px_#67dfbb,_0_0_9px_#67dfbb]"
             type="text"
             onChange={handleTeam}
             placeholder="Team Name"
-            value={team}
+            value={teamname}
           />
 
           {/* BUTTON */}
@@ -75,10 +81,10 @@ function TeamPage() {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             className="font-[Orbitron] mt-5 w-40 sm:w-56 py-3 
-      text-2xl sm:text-3xl rounded-2xl 
-      bg-[#16fa8f] text-[#001f1a] 
-      [box-shadow:_0_0_20px_#00FF9E]
-      hover:bg-[#0fbf6d]"
+            text-2xl sm:text-3xl rounded-2xl 
+            bg-[#16fa8f] text-[#001f1a] 
+            [box-shadow:_0_0_20px_#00FF9E]
+            hover:bg-[#0fbf6d]"
             type="submit"
           >
             Start

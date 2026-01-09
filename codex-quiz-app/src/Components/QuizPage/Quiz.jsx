@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import Layout from "../Layout";
 import QuizQuestionsList from "./QuizQuestionList";
 import QuizQuestionView from "./QuizQuestionView";
@@ -8,6 +8,7 @@ import SecureQuiz from "./SecureQuiz";
 import { useNavigate } from "react-router-dom";
 import Countdown from "./Countdown";
 import Header from "../Header";
+import TeamContext from "../../Contexts/teamContext";
 
 function Quiz() {
   const [activeQuestion, setActiveQuestion] = useState(formData[0]);
@@ -15,6 +16,8 @@ function Quiz() {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const nevigate = useNavigate();
+
+  const {team} = useContext(TeamContext);
 
   // number of attempted questions (non-empty answers)
   const attempted = Object.values(answers).filter(
@@ -85,9 +88,12 @@ function Quiz() {
                 src="main_logo.gif"
                 className="md:block md:w-9 md:ml-5 md:pt-2 hidden"
               />
-              <h1 className="font-[Orbitron] font-bold text-xl text-[#fcf53a] [text-shadow:_0_0_12px_#FFCC00] inline mt-2 ml-5 md:ml-0">
-                Question View
-              </h1>
+              <h1 className="font-[Orbitron] font-bold text-xl text-[#fcf53a] [text-shadow:_0_0_8px_#FFCC00] mt-2 ml-5 md:ml-0">
+              Team :{" "}
+              <span className="text-white [text-shadow:_0_0_8px_#FFCC00]">
+                {team}
+              </span>
+            </h1>
               {/* import time in seconds from server : auto submit function add */}
               <Countdown
                 startSeconds={1800}
