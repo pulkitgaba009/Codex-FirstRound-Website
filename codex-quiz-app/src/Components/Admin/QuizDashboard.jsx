@@ -1,22 +1,27 @@
 import { useState } from "react";
 
+// ✅ Utility function: Convert hrs/min/sec → seconds
+const convertToSeconds = ({ hrs = 0, min = 0, sec = 0 }) => {
+  return (
+    Number(hrs || 0) * 3600 +
+    Number(min || 0) * 60 +
+    Number(sec || 0)
+  );
+};
+
 function QuizDashboard() {
-  const [isOn, setIsOn] = useState(false); 
-  const [isShuffleOn, setIsShuffleOn] = useState(false); 
+  const [isOn, setIsOn] = useState(false);
+  const [isShuffleOn, setIsShuffleOn] = useState(false);
+
   const [formData, setFormData] = useState({
-    quizTitle: "",
+    num: 30,
     hrs: "",
     min: "",
     sec: "",
   });
 
-  const toggleHandler = () => {
-    setIsOn((prev) => !prev);
-  };
-
-  const toggleShuffleHandler = () => {
-    setIsShuffleOn((prev) => !prev);
-  };
+  const toggleHandler = () => setIsOn((prev) => !prev);
+  const toggleShuffleHandler = () => setIsShuffleOn((prev) => !prev);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,21 +33,53 @@ function QuizDashboard() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    console.log("Quiz Active Status:", isOn ? "ON" : "OFF");
-    console.log("Shuffle Status:", isShuffleOn ? "ON" : "OFF");
+
+    const totalSeconds = convertToSeconds(formData);
+
+    if (formData.num <= 0) {
+      alert("Number of questions must be greater than 0");
+      return;
+    }
+
+    if (totalSeconds <= 0) {
+      alert("Quiz time must be greater than 0");
+      return;
+    }
+
+    // ✅ Final payload (backend-ready)
+    const payload = {
+      questionNumbers: formData.num,
+      quizTime: totalSeconds, // seconds
+      quizStatus: isOn,
+      shuffleStatus: isShuffleOn,
+    };
+
+    console.log("Quiz Settings Payload:", payload);
   };
 
   return (
     <div className="box bg-[rgba(0,0,0,0.2)] flex justify-center items-center">
-      <div className="subDivs h-[53%] rounded-lg">
+      <div className="subDivs h-[65%] rounded-lg">
         <h1 className="authHeading">Quiz Control Panel</h1>
         <hr className="horizontalLine mt-2" />
         <br />
 
         <form onSubmit={handleSubmit}>
           <div className="w-full px-4">
+            {/* Number of Questions */}
+            <label className="label">Number of Questions:</label>
+            <input
+              type="number"
+              className="input w-[145px] text-center"
+              name="num"
+              value={formData.num}
+              onChange={handleChange}
+              min={1}
+            />
 
+            <br /><br />
+
+            {/* Quiz Time */}
             <label className="label">Quiz Time:</label>
             <input
               type="number"
@@ -52,7 +89,6 @@ function QuizDashboard() {
               value={formData.hrs}
               onChange={handleChange}
               min={0}
-              onFocus={(e)=>e.target.value=""}
             />
             <input
               type="number"
@@ -62,8 +98,7 @@ function QuizDashboard() {
               value={formData.min}
               onChange={handleChange}
               min={0}
-              max={60}
-              onFocus={(e)=>e.target.value=""}
+              max={59}
             />
             <input
               type="number"
@@ -73,60 +108,51 @@ function QuizDashboard() {
               value={formData.sec}
               onChange={handleChange}
               min={0}
-              max={60}
-              onFocus={(e)=>e.target.value=""}
+              max={59}
             />
 
-            <br />
-            <br />
+            <br /><br />
 
-            <label htmlFor="activeStatus" className="label">
-              Quiz Active Status:
-            </label>
+            {/* Quiz Status */}
+            <label className="label">Quiz Active Status:</label>
             <button
               type="button"
               onClick={toggleHandler}
-              id="activeStatus"
-              className={`ml-23 px-6 py-2 text-xl rounded-2xl font-[Orbitron] cursor-pointer transition-all font-semibold ${
+              className={`ml-23 px-6 py-2 text-xl rounded-2xl font-[Orbitron] transition-all font-semibold ${
                 isOn
-                  ? "bg-[#16fa8f] text-[#001f1a] [box-shadow:_0_0_15px_#00FF9E] "
-                  : "bg-[#fa1616] [box-shadow:_0_0_15px_#fa1616] text-white"
+                  ? "bg-[#16fa8f] text-[#001f1a]"
+                  : "bg-[#fa1616] text-white"
               }`}
             >
               {isOn ? "ON" : "OFF"}
             </button>
 
-            <br />
-            <br />
+            <br /><br />
 
-            <label htmlFor="shuffelStatus" className="label">
-              Shuffel Quiz Questions :
-            </label>
+            {/* Shuffle Status */}
+            <label className="label">Shuffle Quiz Questions:</label>
             <button
               type="button"
               onClick={toggleShuffleHandler}
-              id="shuffelStatus"
-              className={`ml-10 px-6 py-2 text-xl rounded-2xl font-[Orbitron] cursor-pointer transition-all font-medium ${
+              className={`ml-10 px-6 py-2 text-xl rounded-2xl font-[Orbitron] transition-all font-medium ${
                 isShuffleOn
-                  ? "bg-[#16fa8f] text-[#001f1a] [box-shadow:_0_0_15px_#00FF9E] "
-                  : "bg-[#fa1616] [box-shadow:_0_0_15px_#fa1616] text-white"
+                  ? "bg-[#16fa8f] text-[#001f1a]"
+                  : "bg-[#fa1616] text-white"
               }`}
             >
               {isShuffleOn ? "ON" : "OFF"}
             </button>
 
-            <br />
-            <br />
-              <div className="w-full flex justify-center">
-            <button
-              type="submit"
-              className="font-[Orbitron] font-semibold text-white hover:text-[#001f1a] bg-[#fa1616] 
-                     [box-shadow:_0_0_15px_#fa5716f4] w-[80%] 
-                     py-2 text-xl rounded-2xl hover:[box-shadow:_0_0_15px_#00FF9E] 
-                     hover:bg-[#16fa8f] cursor-pointer"
-            >
-              Save Quiz Settings
-            </button>
+            <br /><br />
+
+            {/* Submit */}
+            <div className="w-full flex justify-center">
+              <button
+                type="submit"
+                className="font-[Orbitron] font-semibold text-white bg-[#fa1616] w-[80%] py-2 text-xl rounded-2xl hover:bg-[#16fa8f]"
+              >
+                Save Quiz Settings
+              </button>
             </div>
           </div>
         </form>
