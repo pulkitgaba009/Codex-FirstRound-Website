@@ -1,6 +1,14 @@
+import Question from "../models/Question.js";
+
 // get controller
-const getAllQuestions = (req,res)=>{
-    res.status(200).json({message:"you got 20 posts..."});
+const  getAllQuestions = async(req,res)=>{
+    try{
+        const questions = await Question.find();
+        res.status(200).json(questions);
+    }
+    catch(error){
+        res.send(500).json({"message":"Internal Server error"})
+    }
 }
 
 // post controller

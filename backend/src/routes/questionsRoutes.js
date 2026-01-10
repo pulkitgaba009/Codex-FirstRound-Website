@@ -6,8 +6,6 @@ const router = express.Router();
 // Get request
 router.get("/",getAllQuestions)
 
-export default router;
-
 // Post request
 router.post("/",createQuestion)
 
@@ -17,3 +15,4 @@ router.delete("/:id",deleteQuestion)
 // put request
 router.put("/:id",updateQuestion)
 
+export default router;
