@@ -4,15 +4,15 @@ import { createQuestion, deleteQuestion, getAllQuestions, updateQuestion } from 
 const router = express.Router();
 
 // Get request
-router.get("/",getAllQuestions)
+router.get("/",getAllQuestions);
 
 // Post request
-router.post("/",createQuestion)
+router.post("/",createQuestion);
 
 // delete request
-router.delete("/:id",deleteQuestion)
+router.delete("/:id",deleteQuestion);
 
 // put request
-router.put("/:id",updateQuestion)
+router.put("/:id",updateQuestion);
 
 export default router;

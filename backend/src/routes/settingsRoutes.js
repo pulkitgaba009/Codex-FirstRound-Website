@@ -3,11 +3,11 @@ import { addSettings, getSettings, updateSettings } from "../controllers/setting
 
 const router = express.Router();
 
-router.get("/",getSettings)
+router.get("/",getSettings);
 
-router.put("/:id",updateSettings)
+router.put("/:id",updateSettings);
 
-router.post("/",addSettings)
+router.post("/",addSettings);
 
 
 export default router;

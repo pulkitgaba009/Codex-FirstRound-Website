@@ -12,6 +12,10 @@ const PORT =  process.env.PORT || 8080;
 
 connectDB();
 
+// middleware
+app.use(express.json());
+
+// routes
 app.use("/api/questions",questionsRoutes);
 app.use("/api/settings",settingsRoutes);
 app.use("/api/results",resultRoutes);

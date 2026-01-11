@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// ✅ Utility function: Convert hrs/min/sec → seconds
 const convertToSeconds = ({ hrs = 0, min = 0, sec = 0 }) => {
   return (
     Number(hrs || 0) * 3600 +
@@ -46,10 +45,9 @@ function QuizDashboard() {
       return;
     }
 
-    // ✅ Final payload (backend-ready)
     const payload = {
       questionNumbers: formData.num,
-      quizTime: totalSeconds, // seconds
+      quizTime: totalSeconds, 
       quizStatus: isOn,
       shuffleStatus: isShuffleOn,
     };

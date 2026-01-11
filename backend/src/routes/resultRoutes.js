@@ -7,6 +7,6 @@ router.get("/",getResult);
 
 router.post("/",postResult);
 
-router.delete("/",deleteResult);
+router.delete("/:id",deleteResult);
 
 export default router;
