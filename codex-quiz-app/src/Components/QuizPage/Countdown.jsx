@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
+import TimeContext from "../../Contexts/timeContext";
 
 export default function Countdown({
   startSeconds = 120,
@@ -7,6 +8,13 @@ export default function Countdown({
 }) {
   const completedRef = useRef(false);
   const [time, setTime] = useState(startSeconds);
+
+  const { setTimeData } = useContext(TimeContext);
+
+  useEffect(() => {
+  setTimeData(time); 
+}, [time, setTimeData]);
+
 
   // Reset logic
   useEffect(() => {
@@ -21,7 +29,7 @@ export default function Countdown({
     if (time <= 0) {
       if (!completedRef.current) {
         completedRef.current = true;
-        if (typeof onComplete === "function") onComplete();
+        onComplete?.();
       }
       return;
     }
@@ -38,13 +46,7 @@ export default function Countdown({
 
   return (
     <div className="flex items-center justify-center mt-2">
-      <div
-        className="
-          font-bold text-red-700 
-          bg-black/60 border border-red-700 mr-5
-          px-3 rounded-md font-[Orbitron]
-        "
-      >
+      <div className="font-bold text-red-700 bg-black/60 border border-red-700 mr-5 px-3 rounded-md font-[Orbitron]">
         {String(minutes).padStart(2, "0")} : {String(seconds).padStart(2, "0")}
       </div>
     </div>

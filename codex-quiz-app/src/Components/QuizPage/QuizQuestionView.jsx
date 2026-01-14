@@ -12,7 +12,7 @@ function QuestionView({ question, onAnswer, selectedAnswer }) {
   const handleSelect = (value) => {
     setSelected(value);
     const isCorrect = value === question.answer;
-    onAnswer(question.id, value, isCorrect);
+    onAnswer(question._id, value);
   };
 
   if (!question) return null;
@@ -63,7 +63,7 @@ function QuestionView({ question, onAnswer, selectedAnswer }) {
             >
               <input
                 type="radio"
-                name={`q-${question.id}`}
+                name={`q-${question._id}`}
                 value={optValue}
                 checked={isSelected}
                 onChange={(e) => handleSelect(e.target.value)}

@@ -4,88 +4,106 @@ import QuizQuestionsList from "./QuizQuestionList";
 import QuizQuestionView from "./QuizQuestionView";
 import { motion } from "framer-motion";
 import SecureQuiz from "./SecureQuiz";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSubmit } from "react-router-dom";
 import Countdown from "./Countdown";
 import Header from "../Header";
 import TeamContext from "../../Contexts/teamContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Loading, RateLimiting } from "../../Helper";
+import TimeContext from "../../Contexts/timeContext";
 
 function Quiz() {
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submit, setSubmit] = useState(false);
   const nevigate = useNavigate();
 
   const { team } = useContext(TeamContext);
+  const { timeData } = useContext(TimeContext);
+
+  const saveResult = async () => {
+    try {
+      setSubmit(true);
+      console.log("TEAM FROM CONTEXT:", team);
+      axios.post("http://localhost:3000/api/results", {
+        teamName: team,
+        score: score,
+        timeRemaining: timeData,
+      });
+      toast.success("Results saved in DB Successfully !!!");
+      nevigate("/end");
+    } catch (error) {
+      toast.error("Results can't be saved");
+    } finally {
+      setSubmit(false);
+    }
+  };
 
   // api states
   const [loading, setLoading] = useState(true);
-  const [rateLimited,setRateLimited] = useState(false);
-  const [questions,setQuestions] = useState([]);
+  const [rateLimited, setRateLimited] = useState(false);
+  const [questions, setQuestions] = useState([]);
 
-  useEffect(()=>{
-    const fetchQuestion = async()=>{
+  useEffect(() => {
+    const fetchQuestion = async () => {
       try {
-        const {data} = await axios.get("http://localhost:3000/api/questions");
+        const { data } = await axios.get("http://localhost:3000/api/questions");
         setQuestions(data);
         setActiveQuestion(data[0]);
       } catch (error) {
-        if(error.response?.status===429){
+        if (error.response?.status === 429) {
           setRateLimited(true);
-        }
-        else{
+        } else {
           toast.error("Failed to load questions");
         }
-      } finally{
+      } finally {
         setLoading(false);
+      }
+    };
+
+    fetchQuestion();
+
+    const teamNull= ()=>{
+      if(team ==="" || team ===null){
+       toast.error("Quiz Already Submitted !!!")
+        nevigate("/end");
       }
     }
 
-    fetchQuestion();
-  },[])
+    teamNull();
+  }, 
+  []);
+
 
   // number of attempted questions (non-empty answers)
   const attempted = Object.values(answers).filter(
     (v) => v !== undefined && v !== null && String(v).trim() !== ""
   ).length;
-  
+
   // called by SecureQuiz when user exits fullscreen
   const submitQuiz = () => {
     if (submitted) return; // already submitted
     setSubmitted(true);
 
-    // Put your actual submit logic here:
-
-    // - send `answers` to server
-    // - navigate to results page
-    // - show a modal, etc.
-    console.log("Auto-submitting quiz. Answers:", answers);
-    console.log("Final score:", score);
-
-    // for demo, show an alert (optional)
-    alert(
-      "Quiz auto-submitted due to fullscreen exit. Your score: " +
-        score +
-        "/" +
-        questions.length
-    );
-    nevigate("/");
+    saveResult();
+    // console.log("Auto-submitting quiz. Answers:", answers);
+    // console.log("Final score:", score);
+    // console.log(timeData);
   };
 
   const handleAnswer = (id, value) => {
     if (submitted) return;
 
-    const correctAnswer = questions.find((q) => q.id === id).answer;
+    const correctAnswer = questions.find((q) => q._id === id)?.answer;
 
     setAnswers((prevAnswers) => {
       const prevValue = prevAnswers[id];
       const wasCorrect = prevValue === correctAnswer;
       const nowCorrect = value === correctAnswer;
 
-      // only update score when correctness changed
       if (wasCorrect !== nowCorrect) {
         setScore((prevScore) => {
           const next = prevScore + (nowCorrect ? 1 : -1);
@@ -103,7 +121,7 @@ function Quiz() {
 
       <Header />
       {/* Main Layout + one-time motion */}
-       
+
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -111,11 +129,11 @@ function Quiz() {
         className="overflow-x-hidden mt-10 scrollbar-hidden"
       >
         {/* Loading state  */}
-        {loading && <Loading /> } 
-        
+        {loading && <Loading />}
+
         {/* Rate limit state */}
         {rateLimited && <RateLimiting />}
-        
+
         <div className="w-screen px-4 md:px-16 h-[87%] mt-8 md:mt-16 grid grid-cols-12 grid-rows-12 gap-4">
           {/* Left Panel */}
           <div className="subDivs col-start-1 col-span-12 row-start-4 row-span-8 md:col-start-1 md:col-end-9 md:row-span-12">
@@ -134,7 +152,7 @@ function Quiz() {
               <Countdown
                 startSeconds={1800}
                 resetOnStart={false}
-                onComplete={() => alert("Time's up!")}
+                onComplete={() => submitQuiz()}
               />
             </div>
             <hr className="horizontalLine mt-2" />
@@ -145,18 +163,6 @@ function Quiz() {
               selectedAnswer={answers[activeQuestion?._id]}
               disabled={submitted}
             />
-
-            <div className="mt-4 text-lg font-semibold text-white">
-              {submitted ? (
-                <>
-                  Submitted — Final score: {score} / {questions.length}
-                </>
-              ) : (
-                <>
-                  Score: {score} / {questions.length}
-                </>
-              )}
-            </div>
           </div>
 
           {/* Right Panel */}
@@ -197,9 +203,24 @@ function Quiz() {
                 px-12 py-2 text-3xl sm:text-4xl rounded-2xl 
                 my-8 [box-shadow:_0_0_15px_#00FF9E] hover:bg-[#0fbf6d]"
               // submit pop up
-              onClick={() => submitQuiz()}
+              onClick={() => {
+                toast((t) => (
+                  <span>
+                    Are you sure to Submit?
+                    <button
+                      className="ml-2 bg-[#16fa8f] px-4 py-1 font-bold rounded-md border-rounded"
+                      onClick={() => {
+                        submitQuiz();
+                        toast.dismiss(t.id);
+                      }}
+                    >
+                      Yes
+                    </button>
+                  </span>
+                ));
+              }}
             >
-              Submit
+              {submit ? "Submitting..." : "Submit"}
             </motion.button>
           </div>
         </div>

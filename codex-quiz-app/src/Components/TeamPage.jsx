@@ -1,16 +1,32 @@
-import { useState,useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "./Header";
 import TeamContext from "../Contexts/teamContext";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function TeamPage() {
   const [teamname, setTeamname] = useState("");
   const navigate = useNavigate();
 
-  const {setTeam} = useContext(TeamContext);
-  
+  const { setTeam } = useContext(TeamContext);
+
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    const getResults = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/api/results");
+        setResults(data);
+      } catch (error) {
+        toast.error("Failed to data");
+      }
+    };
+
+    getResults();
+  }, []);
 
   const handleTeam = (event) => {
     setTeamname(event.target.value.toUpperCase());
@@ -18,9 +34,19 @@ function TeamPage() {
 
   const handleForm = (e) => {
     e.preventDefault();
-    if (!teamname.trim()) return;
 
-    setTeam(teamname);
+    const trimmedName = teamname.trim().toUpperCase();
+    if (!trimmedName) return;
+
+    const alreadySubmitted = results.some(
+      (r) => r.teamName?.toUpperCase() === trimmedName
+    );
+
+    if (alreadySubmitted) {
+      toast.error("Team has already submitted the quiz");
+      return;
+    }
+    setTeam(trimmedName);
     navigate("/rules");
   };
 

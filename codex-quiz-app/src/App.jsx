@@ -10,6 +10,7 @@ import AddQuestion from "./Components/Admin/AddQuestion";
 import EditQuestion from "./Components/Admin/EditQuestion";
 import Leadboard from "./Components/Admin/Leadboard";
 import Quiz from "./Components/QuizPage/Quiz";
+import End from "./End";
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
     <Route path="/" element={<TeamPage/>}></Route>
     <Route path="/rules" element={<Rules/>}></Route>
     <Route path="/quiz" element={<Quiz/>}></Route> 
-
+    <Route path="/end" element={<End/>}></Route>
     <Route path="/adminAuth" element={<AdminAuth/>}></Route>
     <Route path="/adminPannel" element={<AdminLayout/>}>
       <Route index element={<QuizDashboard/>}></Route>
