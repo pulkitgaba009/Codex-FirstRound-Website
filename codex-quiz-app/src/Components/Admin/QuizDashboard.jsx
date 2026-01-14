@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Loading, RateLimiting } from "../../Helper";
 
 const convertToSeconds = ({ hrs = 0, min = 0, sec = 0 }) => {
-  return (
-    Number(hrs || 0) * 3600 +
-    Number(min || 0) * 60 +
-    Number(sec || 0)
-  );
+  return Number(hrs || 0) * 3600 + Number(min || 0) * 60 + Number(sec || 0);
 };
 
 function QuizDashboard() {
@@ -13,11 +12,48 @@ function QuizDashboard() {
   const [isShuffleOn, setIsShuffleOn] = useState(false);
 
   const [formData, setFormData] = useState({
-    num: 30,
+    num: 10,
     hrs: "",
     min: "",
     sec: "",
   });
+
+  // api states
+  const [loading, setLoading] = useState(true);
+  const [rateLimited, setRateLimited] = useState(false);
+  const [update,setUpdate] = useState(false);
+
+  const getSettings = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/api/settings");
+    
+        const hours = Math.floor(data[0].quizTime / 3600);
+        const minuts = Math.floor((data[0].quizTime % 3600) / 60);
+        const seconds = data[0].quizTime % 60;
+        
+        setIsOn(data[0].quizStatus);
+        setFormData({
+          num: data[0].questionNumbers,
+          hrs: hours,
+          min: minuts,
+          sec: seconds,
+        });
+        setIsShuffleOn(data[0].shuffleStatus);
+        console.log();
+      } catch (error) {
+        if (error.response?.status === 429) {
+          setRateLimited(true);
+        } else {
+          toast.error("Failed to load setting");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+  useEffect(() => {
+    getSettings();
+  }, []);
 
   const toggleHandler = () => setIsOn((prev) => !prev);
   const toggleShuffleHandler = () => setIsShuffleOn((prev) => !prev);
@@ -47,16 +83,41 @@ function QuizDashboard() {
 
     const payload = {
       questionNumbers: formData.num,
-      quizTime: totalSeconds, 
+      quizTime: totalSeconds,
       quizStatus: isOn,
       shuffleStatus: isShuffleOn,
     };
 
+    const putSettings = async()=>{
+      try{
+        setUpdate(true);
+        await axios.put("http://localhost:3000/api/settings/6962af0a6027944aebae060c",payload);
+        getSettings();
+        toast.success("Settings Updated Successfully !!!");
+      }catch(error){
+        if (error.response?.status === 429) {
+          setRateLimited(true);
+        } else {
+          toast.error("Failed to update settings");
+        }
+      }finally{
+         setUpdate(false);
+      }
+    }
+
+    putSettings();
+
     console.log("Quiz Settings Payload:", payload);
   };
 
+  // Loading state
+  if (loading) return <Loading />;
+
+  // Rate limit state
+  if (rateLimited) return <RateLimiting />;
+
   return (
-    <div className="box bg-[rgba(0,0,0,0.2)] flex justify-center items-center">
+    <div className="box flex justify-center items-center">
       <div className="subDivs h-[65%] rounded-lg">
         <h1 className="authHeading">Quiz Control Panel</h1>
         <hr className="horizontalLine mt-2" />
@@ -75,7 +136,8 @@ function QuizDashboard() {
               min={1}
             />
 
-            <br /><br />
+            <br />
+            <br />
 
             {/* Quiz Time */}
             <label className="label">Quiz Time:</label>
@@ -109,7 +171,8 @@ function QuizDashboard() {
               max={59}
             />
 
-            <br /><br />
+            <br />
+            <br />
 
             {/* Quiz Status */}
             <label className="label">Quiz Active Status:</label>
@@ -117,15 +180,14 @@ function QuizDashboard() {
               type="button"
               onClick={toggleHandler}
               className={`ml-23 px-6 py-2 text-xl rounded-2xl font-[Orbitron] transition-all font-semibold ${
-                isOn
-                  ? "bg-[#16fa8f] text-[#001f1a]"
-                  : "bg-[#fa1616] text-white"
+                isOn ? "bg-[#16fa8f] text-[#001f1a]" : "bg-[#fa1616] text-white"
               }`}
             >
               {isOn ? "ON" : "OFF"}
             </button>
 
-            <br /><br />
+            <br />
+            <br />
 
             {/* Shuffle Status */}
             <label className="label">Shuffle Quiz Questions:</label>
@@ -141,7 +203,8 @@ function QuizDashboard() {
               {isShuffleOn ? "ON" : "OFF"}
             </button>
 
-            <br /><br />
+            <br />
+            <br />
 
             {/* Submit */}
             <div className="w-full flex justify-center">
@@ -149,7 +212,7 @@ function QuizDashboard() {
                 type="submit"
                 className="font-[Orbitron] font-semibold text-white bg-[#fa1616] w-[80%] py-2 text-xl rounded-2xl hover:bg-[#16fa8f]"
               >
-                Save Quiz Settings
+                {update?"Updating Settings...":"Save Quiz Settings"}
               </button>
             </div>
           </div>

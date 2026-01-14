@@ -108,7 +108,7 @@ function Quiz() {
         initial={{ opacity: 0, scale: 0.97, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="overflow-x-hidden mt-10"
+        className="overflow-x-hidden mt-10 scrollbar-hidden"
       >
         {/* Loading state  */}
         {loading && <Loading /> } 
@@ -116,7 +116,7 @@ function Quiz() {
         {/* Rate limit state */}
         {rateLimited && <RateLimiting />}
         
-        <div className="w-full px-4 md:px-16 h-[87%] mt-8 md:mt-16 grid grid-cols-12 grid-rows-12 gap-4">
+        <div className="w-screen px-4 md:px-16 h-[87%] mt-8 md:mt-16 grid grid-cols-12 grid-rows-12 gap-4">
           {/* Left Panel */}
           <div className="subDivs col-start-1 col-span-12 row-start-4 row-span-8 md:col-start-1 md:col-end-9 md:row-span-12">
             <div className="flex justify-between items-center">

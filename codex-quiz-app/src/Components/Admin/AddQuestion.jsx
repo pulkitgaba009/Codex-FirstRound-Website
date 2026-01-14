@@ -1,6 +1,9 @@
 import { useState } from "react";
 import QuestionForm from "./QuestionForm";
 import QuestionView from "./QuestionView";
+import { RateLimiting } from "../../Helper";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function AddQuestion() {
   const [formData, setFormData] = useState({
@@ -23,6 +26,34 @@ int main() {
 }`,
   });
 
+  const [loading, setLoading] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
+
+  const postQuestion = async () => {
+    try {
+      setLoading(true);
+      axios.post("http://localhost:3000/api/questions", {
+        question:formData.question,
+        optionA:formData.optionA,
+        optionB:formData.optionB,
+        optionC:formData.optionC,
+        optionD:formData.optionD,
+        answer:formData.answer,
+        language:formData.language,
+        code:formData.code,
+      });
+      toast.success("Added question in DB Successfully !!! ");
+    } catch (error) {
+      if (error.response?.status === 429) {
+        setRateLimited(true);
+      } else {
+        toast.error("Failed to load setting");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -30,6 +61,8 @@ int main() {
       [name]: value,
     }));
   };
+
+  if (rateLimited) return <RateLimiting />;
 
   return (
     <div className="box">
@@ -45,8 +78,9 @@ int main() {
           <QuestionForm
             formData={formData}
             onChange={handleChange}
+            onSubmit={postQuestion}
             mode="post"
-            isDelete={false}
+            isLoading={loading}
           />
         </div>
       </div>

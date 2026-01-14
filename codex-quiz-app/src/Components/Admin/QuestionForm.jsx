@@ -1,8 +1,10 @@
-function QuestionForm({ formData, onChange, onSubmit, mode ,isDelete }) {
+function QuestionForm({ formData, onChange, onSubmit, mode ,isDelete,isLoading }) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    // onSubmit(formData); // Add this while working on backend
+    if(mode === "post"){
+      onSubmit();
+    }
   };
 
   return (
