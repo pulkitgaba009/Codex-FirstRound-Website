@@ -21,10 +21,16 @@ const formatTime = (seconds = 0) => {
 /* ---------- SORT FUNCTION ---------- */
 const sortByScoreAndTime = (results) => {
   return [...results].sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    return a.timeRemaining - b.timeRemaining;
+    // 1️⃣ Higher score first
+    if (b.score !== a.score) {
+      return b.score - a.score;
+    }
+
+    // 2️⃣ Higher remaining time first (faster submission)
+    return b.timeRemaining - a.timeRemaining;
   });
 };
+
 
 function Leaderboard() {
   const [loading, setLoading] = useState(true);

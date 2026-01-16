@@ -2,28 +2,19 @@ import { useState } from "react";
 import QuestionForm from "./QuestionForm";
 import QuestionView from "./QuestionView";
 import { RateLimiting } from "../../Helper";
-import axios from "axios";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 function AddQuestion() {
   const [formData, setFormData] = useState({
-    question: "What is the output of the following C code?",
-    optionA: "45",
-    optionB: "55",
-    optionC: "65",
-    optionD: "75",
-    answer: "55",
-    language: "C",
-    code: `#include <stdio.h>
-
-int main() {
-    int sum = 0;
-    for (int i = 1; i <= 10; i++) {
-        sum += i;
-    }
-    printf("%d", sum);
-    return 0;
-}`,
+    question: null,
+    optionA: null,
+    optionB: null,
+    optionC: null,
+    optionD: null,
+    answer: null,
+    language: null,
+    code: null
   });
 
   const [loading, setLoading] = useState(false);
@@ -32,7 +23,7 @@ int main() {
   const postQuestion = async () => {
     try {
       setLoading(true);
-      axios.post("http://localhost:3000/api/questions", {
+      await axios.post("http://localhost:3000/api/questions", {
         question:formData.question,
         optionA:formData.optionA,
         optionB:formData.optionB,
@@ -47,7 +38,7 @@ int main() {
       if (error.response?.status === 429) {
         setRateLimited(true);
       } else {
-        toast.error("Failed to load setting");
+        toast.error("Question cant be added in DB");
       }
     } finally {
       setLoading(false);
@@ -81,6 +72,7 @@ int main() {
             onSubmit={postQuestion}
             mode="post"
             isLoading={loading}
+            setRateLimited={setRateLimited}
           />
         </div>
       </div>

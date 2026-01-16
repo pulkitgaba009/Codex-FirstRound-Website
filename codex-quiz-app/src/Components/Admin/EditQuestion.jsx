@@ -82,6 +82,8 @@ function EditQuestion() {
                   onChange={handleChange}
                   mode="put"
                   isDelete={true}
+                  setQuestions={setQuestions}
+                  setRateLimited={setRateLimited}
                 />
               )}
             </div>

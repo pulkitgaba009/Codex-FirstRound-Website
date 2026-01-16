@@ -4,7 +4,7 @@ import QuizQuestionsList from "./QuizQuestionList";
 import QuizQuestionView from "./QuizQuestionView";
 import { motion } from "framer-motion";
 import SecureQuiz from "./SecureQuiz";
-import { useNavigate, useSubmit } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Countdown from "./Countdown";
 import Header from "../Header";
 import TeamContext from "../../Contexts/teamContext";
@@ -20,14 +20,54 @@ function Quiz() {
   const [submitted, setSubmitted] = useState(false);
   const [submit, setSubmit] = useState(false);
   const nevigate = useNavigate();
-
+  const [results, setResults] = useState([]);
   const { team } = useContext(TeamContext);
   const { timeData } = useContext(TimeContext);
+
+  const [settings, setSettings] = useState();
+
+  const getSettings = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/api/settings");
+      setSettings(data[0]);
+      // toast.success("Got settings");
+    } catch (error) {
+      console.log("ERROR : ", error);
+      toast.error("Failed to load quiz settings");
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (settings) {
+      console.log("Settings updated:", settings);
+    }
+  }, [settings]);
+
+  const prepareQuestions = (allQuestions, settings) => {
+    if (!settings || !Array.isArray(allQuestions)) return [];
+
+    let finalQuestions = [...allQuestions];
+
+    // Shuffle if enabled
+    if (settings.shuffleStatus) {
+      for (let i = finalQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [finalQuestions[i], finalQuestions[j]] = [
+          finalQuestions[j],
+          finalQuestions[i],
+        ];
+      }
+    }
+
+    return finalQuestions.slice(
+      0,
+      Math.min(settings.questionNumbers, finalQuestions.length)
+    );
+  };
 
   const saveResult = async () => {
     try {
       setSubmit(true);
-      console.log("TEAM FROM CONTEXT:", team);
       axios.post("http://localhost:3000/api/results", {
         teamName: team,
         score: score,
@@ -42,17 +82,46 @@ function Quiz() {
     }
   };
 
+    useEffect(() => {
+    const getResults = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/api/results");
+
+        const alreadySubmitted = data.some(
+          (r) => r.teamName?.toUpperCase() === team?.toUpperCase()
+        );
+
+        if (alreadySubmitted) {
+          toast.error("Team has already submitted the quiz");
+          nevigate("/end");
+          return;
+        }
+
+        setResults(data);
+      } catch {
+        toast.error("Failed to fetch results");
+      }
+    };
+
+    if (team) getResults();
+  }, [team]);
+
   // api states
   const [loading, setLoading] = useState(true);
   const [rateLimited, setRateLimited] = useState(false);
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
+    if (!settings) return;
+
     const fetchQuestion = async () => {
       try {
         const { data } = await axios.get("http://localhost:3000/api/questions");
-        setQuestions(data);
-        setActiveQuestion(data[0]);
+
+        const prepared = prepareQuestions(data, settings);
+
+        setQuestions(prepared);
+        setActiveQuestion(prepared[0]);
       } catch (error) {
         if (error.response?.status === 429) {
           setRateLimited(true);
@@ -65,18 +134,18 @@ function Quiz() {
     };
 
     fetchQuestion();
+  }, [settings]);
 
-    const teamNull= ()=>{
-      if(team ==="" || team ===null){
-       toast.error("Quiz Already Submitted !!!")
-        nevigate("/end");
-      }
+  useEffect(() => {
+    if (!team) {
+      toast.error("Quiz Already Submitted !!!");
+      nevigate("/end");
     }
+  }, [team]);
 
-    teamNull();
-  }, 
-  []);
-
+  useEffect(() => {
+    getSettings();
+  }, []);
 
   // number of attempted questions (non-empty answers)
   const attempted = Object.values(answers).filter(
@@ -117,7 +186,7 @@ function Quiz() {
 
   return (
     <Layout>
-      {/* <SecureQuiz onAutoSubmit={submitQuiz} /> */}
+      <SecureQuiz onAutoSubmit={submitQuiz} /> 
 
       <Header />
       {/* Main Layout + one-time motion */}
@@ -149,11 +218,13 @@ function Quiz() {
                 </span>
               </h1>
               {/* import time in seconds from server : auto submit function add */}
-              <Countdown
-                startSeconds={1800}
-                resetOnStart={false}
-                onComplete={() => submitQuiz()}
-              />
+              {settings && (
+                <Countdown
+                  startSeconds={settings.quizTime}
+                  resetOnStart={false}
+                  onComplete={submitQuiz}
+                />
+              )}
             </div>
             <hr className="horizontalLine mt-2" />
 
@@ -208,7 +279,7 @@ function Quiz() {
                   <span>
                     Are you sure to Submit?
                     <button
-                      className="ml-2 bg-[#16fa8f] px-4 py-1 font-bold rounded-md border-rounded"
+                      className="ml-2 hover:bg-[#16fa8f] hover:text-black/80 px-4 py-1 font-bold rounded-md border-rounded bg-[#da2525] text-white/90"
                       onClick={() => {
                         submitQuiz();
                         toast.dismiss(t.id);
