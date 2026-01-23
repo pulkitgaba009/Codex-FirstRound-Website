@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Layout from "../Layout";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function AdminAuth() {
   const [password, setPassword] = useState("");
@@ -11,7 +12,7 @@ export default function AdminAuth() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/admin-login", {
+      const res = await axios.post("http://localhost:3000/api/auth", {
         password,
       });
 
@@ -20,7 +21,7 @@ export default function AdminAuth() {
         navigate("/adminPannel");
       }
     } catch (err) {
-      alert("Invalid password");
+      toast.error("Invalid user");
       navigate("/");
     }
   };
