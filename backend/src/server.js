@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import resultRoutes from "./routes/resultRoutes.js";
 import rateLimiter from "./middleware/rateLimiter.js";
+import adminRoute from "./routes/authRoute.js"
 import cors from "cors";
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use("/api/questions", questionsRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/results", resultRoutes);
+app.use("/api/auth",adminRoute)
 
 connectDB().then(() => {
   app.listen(PORT, () => {

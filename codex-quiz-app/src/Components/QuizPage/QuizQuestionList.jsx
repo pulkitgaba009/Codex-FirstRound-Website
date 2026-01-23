@@ -1,7 +1,7 @@
 function QuizQuestionsList({ questions, activeId, onSelect, answers }) {
   return (
-    <div className="flex items-center md:items-start  w-full h-[55%] md:h-[89%] overflow-x-auto md:overflow-y-auto md:overflow-x-hidden scrollbar-hidden mt-2 md:mt-0">
-      <div className="px-4 mt-[5px] w-full md:mt-4 text-white gap-4 flex justify-start md:justify-evenly lg:justify-start md:flex-wrap min-w-max md:min-w-0">
+    <div className="flex items-center md:items-start w-full h-[55%] md:h-[89%] overflow-x-auto md:overflow-y-auto md:overflow-x-hidden scrollbar-hidden mt-2 md:mt-0 ">
+      <div className="px-4 mt-[5px] w-full md:mt-4 text-white gap-4 flex justify-start md:justify-evenly lg:justify-evenly md:flex-wrap min-w-max md:min-w-0">
         {questions.map((q, index) => {
           const isActive = q._id === activeId;          
           const isAnswered = answers[q._id] !== undefined;
@@ -11,7 +11,7 @@ function QuizQuestionsList({ questions, activeId, onSelect, answers }) {
               key={q._id}
               onClick={() => onSelect(q)}
               className={`
-                w-[3rem] h-[3rem] md:w-[4rem] md:h-[4rem]
+                w-[3rem] h-[3rem] md:w-[5rem] md:h-[5rem]
                 text-2xl rounded-full font-[Montserrat] font-semibold
                 transition-all duration-200 mx-1 bg-black
                 text-white
