@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../utils/axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -25,7 +25,7 @@ function QuestionForm({
   const deleteQuestion = async () => {
     try {
       setDel(true);
-      await axios.delete(`http://localhost:3000/api/questions/${formData._id}`);
+      await api.delete(`questions/${formData._id}`);
       setQuestions((prev) => prev.filter((item) => item._id !== formData._id));
       toast.success("Question deleted successfully");
     } catch (error) {
@@ -42,7 +42,7 @@ function QuestionForm({
   const updateQuestion = async()=>{
     try {
       setUpdate(true);
-      await axios.put(`http://localhost:3000/api/questions/${formData._id}`,{
+      await api.put(`/questions/${formData._id}`,{
         question:formData.question,
         optionA:formData.optionA,
         optionB:formData.optionB,
@@ -53,7 +53,7 @@ function QuestionForm({
         code:formData.code,
       })
       
-      const {data} = await axios.get("http://localhost:3000/api/questions");
+      const {data} = await api.get("/questions");
       setQuestions(data)
       toast.success("Question updated successfully");
     } catch (error) {

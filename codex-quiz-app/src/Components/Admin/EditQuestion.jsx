@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import QuestionForm from "./QuestionForm";
 import QuestionView from "./QuestionView";
 import QuestionBox from "./QuestionBox";
-import axios from "axios";
+import api from "../../utils/axios";
 import toast from "react-hot-toast";
 import { RateLimiting,Loading } from "../../Helper";
 
@@ -15,7 +15,7 @@ function EditQuestion() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/questions");
+        const { data } = await api.get("/questions");
         setQuestions(data);
         setSelectedQuestion(data[0] || null);
       } catch (error) {
