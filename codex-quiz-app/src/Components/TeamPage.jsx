@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "./Header";
 import TeamContext from "../Contexts/teamContext";
-import axios from "axios";
+import api from "../utils/axios";
 import toast from "react-hot-toast";
 
 function TeamPage() {
@@ -18,7 +18,7 @@ function TeamPage() {
   useEffect(() => {
     const getResults = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/results");
+        const { data } = await api.get("/results");
         setResults(data);
       } catch (error) {
         toast.error("Failed to data");
@@ -64,7 +64,7 @@ function TeamPage() {
           text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
           [text-shadow:_0_0_10px_#3eeb91]"
         >
-          CODE KE BOSS <br /> 2025
+          CODE KE BOSS <br /> 2026
         </motion.h1>
 
         {/* SUBTITLE */}

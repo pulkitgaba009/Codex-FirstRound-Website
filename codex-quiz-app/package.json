@@ -17,6 +17,7 @@
     "@mui/styled-engine-sc": "^7.3.1",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.13.2",
+    "codex-firstround-website": "file:..",
     "motion": "^12.23.24",
     "primereact": "^10.9.6",
     "react": "^19.1.1",

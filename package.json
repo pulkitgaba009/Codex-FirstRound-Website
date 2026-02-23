@@ -1,0 +1,21 @@
+{
+  "name": "codex-firstround-website",
+  "version": "1.0.0",
+  "description": "A **full-stack Quiz Application** developed using the **MERN stack (MongoDB, Express.js, React.js, and Node.js)**, designed to deliver a **scalable, secure, and high-performance online assessment platform**.",
+  "main": "index.js",
+  "scripts": {
+    "build":"npm i --prefix backend && npm i --prefix codex-quiz-app && npm run build --prefix codex-quiz-app",
+    "start": "npm run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pulkitgaba009/Codex-FirstRound-Website.git"
+  },
+  "keywords": [],
+  "author": "Pulkit Gaba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pulkitgaba009/Codex-FirstRound-Website/issues"
+  },
+  "homepage": "https://github.com/pulkitgaba009/Codex-FirstRound-Website#readme"
+}

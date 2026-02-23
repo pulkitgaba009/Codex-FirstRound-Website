@@ -162,7 +162,7 @@ function QuestionForm({
         className="input w-[250px] text-center"
       >
         <option value="C">C</option>
-        <option value="C++">C++</option>
+        <option value="cpp">C++</option>
         <option value="Java">Java</option>
         <option value="Python">Python</option>
         <option value="JavaScript">JavaScript</option>

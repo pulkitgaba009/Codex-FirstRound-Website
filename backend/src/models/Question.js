@@ -35,7 +35,7 @@ const questionSchema = new mongoose.Schema(
 
     language: {
       type: String,
-      enum: ["C", "C++", "Java", "Python", "JavaScript"],
+      enum: ["C", "C++", "Java", "Python", "JavaScript","cpp"],
       required: true,
     },
 

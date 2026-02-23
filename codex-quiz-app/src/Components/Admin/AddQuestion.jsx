@@ -3,7 +3,7 @@ import QuestionForm from "./QuestionForm";
 import QuestionView from "./QuestionView";
 import { RateLimiting } from "../../Helper";
 import toast from "react-hot-toast";
-import axios from "axios";
+import api from "../../utils/axios";
 
 function AddQuestion() {
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ function AddQuestion() {
   const postQuestion = async () => {
     try {
       setLoading(true);
-      await axios.post("http://localhost:3000/api/questions", {
+      await api.post("/questions", {
         question:formData.question,
         optionA:formData.optionA,
         optionB:formData.optionB,

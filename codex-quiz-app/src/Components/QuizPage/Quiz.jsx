@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Countdown from "./Countdown";
 import Header from "../Header";
 import TeamContext from "../../Contexts/teamContext";
-import axios from "axios";
+import api from "../../utils/axios";
 import toast from "react-hot-toast";
 import { Loading, RateLimiting } from "../../Helper";
 import TimeContext from "../../Contexts/timeContext";
@@ -28,7 +28,7 @@ function Quiz() {
 
   const getSettings = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/api/settings");
+      const { data } = await api.get("/settings");
       setSettings(data[0]);
       // toast.success("Got settings");
     } catch (error) {
@@ -68,7 +68,7 @@ function Quiz() {
   const saveResult = async () => {
     try {
       setSubmit(true);
-      axios.post("http://localhost:3000/api/results", {
+      api.post("/results", {
         teamName: team,
         score: score,
         timeRemaining: timeData,
@@ -85,7 +85,7 @@ function Quiz() {
     useEffect(() => {
     const getResults = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/results");
+        const { data } = await api.get("/results");
 
         const alreadySubmitted = data.some(
           (r) => r.teamName?.toUpperCase() === team?.toUpperCase()
@@ -116,7 +116,7 @@ function Quiz() {
 
     const fetchQuestion = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/questions");
+        const { data } = await api.get("/questions");
 
         const prepared = prepareQuestions(data, settings);
 
@@ -186,10 +186,9 @@ function Quiz() {
 
   return (
     <Layout>
-      {/* <SecureQuiz onAutoSubmit={submitQuiz} />  */}
+      <SecureQuiz onAutoSubmit={submitQuiz} /> 
 
       <Header />
-      {/* Main Layout + one-time motion */}
 
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 20 }}
@@ -217,7 +216,7 @@ function Quiz() {
                   {team}
                 </span>
               </h1>
-              {/* import time in seconds from server : auto submit function add */}
+            
               {settings && (
                 <Countdown
                   startSeconds={settings.quizTime}
