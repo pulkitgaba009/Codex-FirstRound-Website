@@ -5,7 +5,7 @@ const router = express.Router();
 router.post("/", (req, res) => {
   const { password } = req.body;
 
-  if (password === process.env.ADMIN_PASSWORD) {
+  if (password === "Pg@23360900145") {
     return res.status(200).json({ success: true });
   }
 

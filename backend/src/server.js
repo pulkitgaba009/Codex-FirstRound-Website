@@ -40,11 +40,11 @@ app.use("/api/auth", adminRoute);
 // serve frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../codex-quiz-app/dist")));
-app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../codex-quiz-app", "dist", "index.html"),
-  );
-});
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "../codex-quiz-app", "dist", "index.html"),
+    );
+  });
 }
 
 connectDB().then(() => {
