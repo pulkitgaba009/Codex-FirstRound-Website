@@ -128,10 +128,10 @@ export default function Rules() {
               transition={{ duration: 0.8 }}
               className="rulePara list-disc ml-5"
             >
-              <li>Each correct answer = +1 points</li>
-              <li>Wrong answer = –1 point (negative marking)</li>
+              <li>Each correct answer =<strong> +1 points</strong></li>
+              <li>Wrong answer =<strong> –1 point (negative marking)</strong></li>
               <li>No external resources allowed.</li>
-              <li>Switching tabs during the competition is strictly prohibited. If a participant is found switching tabs, their test/session will be automatically locked/submitted, and they will be directly disqualified from the round.</li>
+              <li><strong>Switching tabs</strong> during the competition is <strong>strictly prohibited. </strong>If a participant is found switching tabs, their test/session will be automatically locked/submitted, and they will be directly disqualified from the round.</li>
               <li>Top 5 teams qualify for Round 2.</li>
             </motion.ul>
 
