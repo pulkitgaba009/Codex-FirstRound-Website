@@ -79,8 +79,8 @@ export default function Rules() {
               className="rulePara list-disc ml-5"
             >
               <li>Type: Multiple Choice Questions (MCQ)</li>
-              <li>Number of Questions: 20 MCQs</li>
-              <li>Time Limit: 30 minutes</li>
+              <li>Number of Questions:<strong> 20 MCQs</strong></li>
+              <li>Time Limit: <strong>30 minutes</strong></li>
               <li>Mode: Online interface / on-paper (as per setup)</li>
             </motion.ul>
 
