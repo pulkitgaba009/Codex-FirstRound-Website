@@ -78,9 +78,9 @@ export default function Rules() {
               transition={{ duration: 0.8 }}
               className="rulePara list-disc ml-5"
             >
-              <li>Type: Multiple Choice Questions (MCQ) + Rapid Fire</li>
-              <li>Number of Questions: 15 MCQs + 5 Rapid Fire</li>
-              <li>Time Limit: 20 minutes</li>
+              <li>Type: Multiple Choice Questions (MCQ)</li>
+              <li>Number of Questions: 20 MCQs</li>
+              <li>Time Limit: 30 minutes</li>
               <li>Mode: Online interface / on-paper (as per setup)</li>
             </motion.ul>
 
@@ -128,10 +128,10 @@ export default function Rules() {
               transition={{ duration: 0.8 }}
               className="rulePara list-disc ml-5"
             >
-              <li>Each correct answer = +4 points</li>
+              <li>Each correct answer = +1 points</li>
               <li>Wrong answer = –1 point (negative marking)</li>
               <li>No external resources allowed.</li>
-              <li>Rapid Fire: 30 seconds per question. No going back.</li>
+              <li>Switching tabs during the competition is strictly prohibited. If a participant is found switching tabs, their test/session will be automatically locked/submitted, and they will be directly disqualified from the round.</li>
               <li>Top 5 teams qualify for Round 2.</li>
             </motion.ul>
 
