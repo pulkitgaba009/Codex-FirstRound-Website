@@ -132,7 +132,7 @@ export default function Rules() {
               <li>Wrong answer =<strong> –1 point (negative marking)</strong></li>
               <li>No external resources allowed.</li>
               <li><strong>Switching tabs</strong> during the competition is <strong>strictly prohibited. </strong>If a participant is found switching tabs, their test/session will be automatically locked/submitted, and they will be directly disqualified from the round.</li>
-              <li>Top 5 teams qualify for Round 2.</li>
+              <li>Top 10 teams qualify for Round 2.</li>
             </motion.ul>
 
             <br />
